@@ -1,72 +1,65 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
-export default class UserSignIn extends Component {
-  state = {
-    username: '',
-    password: '',
-    errors: [],
-  }
+const UserSignIn = () => {
+	const [formData, setFormData] = useState({
+		username: '',
+		password: '',
+		errors: [],
+	});
 
-  render() {
-    const {
-      username,
-      password,
-      errors,
-    } = this.state;
+	const { username, password, errors } = formData;
 
-    return (
-      <div className="bounds">
-        <div className="grid-33 centered signin">
-          <h1>Sign In</h1>
-          <Form 
-            cancel={this.cancel}
-            errors={errors}
-            submit={this.submit}
-            submitButtonText="Sign In"
-            elements={() => (
-              <React.Fragment>
-                <input 
-                  id="username" 
-                  name="username" 
-                  type="text"
-                  value={username} 
-                  onChange={this.change} 
-                  placeholder="User Name" />
-                <input 
-                  id="password" 
-                  name="password"
-                  type="password"
-                  value={password} 
-                  onChange={this.change} 
-                  placeholder="Password" />                
-              </React.Fragment>
-            )} />
-          <p>
-            Don't have a user account? <Link to="/signup">Click here</Link> to sign up!
-          </p>
-        </div>
-      </div>
-    );
-  }
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+		setFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+	};
 
-  change = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
+	const handleSubmit = () => {};
 
-    this.setState(() => {
-      return {
-        [name]: value
-      };
-    });
-  }
+	const handleCancel = () => {};
 
-  submit = () => {
+	return (
+		<div className="bounds">
+			<div className="grid-33 centered signin">
+				<h1>Sign In</h1>
+				<Form
+					cancel={handleCancel}
+					errors={errors}
+					submit={handleSubmit}
+					submitButtonText="Sign In"
+					elements={() => (
+						<>
+							<input
+								id="username"
+								name="username"
+								type="text"
+								value={username}
+								onChange={handleChange}
+								placeholder="User Name"
+							/>
+							<input
+								id="password"
+								name="password"
+								type="password"
+								value={password}
+								onChange={handleChange}
+								placeholder="Password"
+							/>
+						</>
+					)}
+				/>
+				<p>
+					Don't have a user account? <Link to="/signup">Click here</Link>{' '}
+					to sign up!
+				</p>
+			</div>
+		</div>
+	);
+};
 
-  }
-
-  cancel = () => {
-
-  }
-}
+export default UserSignIn;

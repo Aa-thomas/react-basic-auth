@@ -1,84 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import withContext from '../Context';
+import { withContext } from '../Context';
 import Form from './Form';
 
-export default class UserSignUp extends Component {
-	state = {
+const UserSignUp = ({ context, history }) => {
+	const [formData, setFormData] = useState({
 		name: '',
 		username: '',
 		password: '',
 		errors: [],
+	});
+
+	const { name, username, password, errors } = formData;
+
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+		setFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
 	};
 
-	UserSignUpWithContext = withContext(UserSignUp);
-
-	render() {
-		const { name, username, password, errors } = this.state;
-
-		return (
-			<div className="bounds">
-				<div className="grid-33 centered signin">
-					<h1>Sign Up</h1>
-					<Form
-						cancel={this.cancel}
-						errors={errors}
-						submit={this.submit}
-						submitButtonText="Sign Up"
-						elements={() => (
-							<React.Fragment>
-								<input
-									id="name"
-									name="name"
-									type="text"
-									value={name}
-									onChange={this.change}
-									placeholder="Name"
-								/>
-								<input
-									id="username"
-									name="username"
-									type="text"
-									value={username}
-									onChange={this.change}
-									placeholder="User Name"
-								/>
-								<input
-									id="password"
-									name="password"
-									type="password"
-									value={password}
-									onChange={this.change}
-									placeholder="Password"
-								/>
-							</React.Fragment>
-						)}
-					/>
-					<p>
-						Already have a user account?{' '}
-						<Link to="/signin">Click here</Link> to sign in!
-					</p>
-				</div>
-			</div>
-		);
-	}
-
-	change = (event) => {
-		const name = event.target.name;
-		const value = event.target.value;
-
-		this.setState(() => {
-			return {
-				[name]: value,
-			};
-		});
-	};
-
-	submit = () => {
-		const { context } = this.props;
-
-		const { name, username, password } = this.state;
-
+	const handleSubmit = () => {
 		// New user payload
 		const user = {
 			name,
@@ -90,7 +33,7 @@ export default class UserSignUp extends Component {
 			.createUser(user)
 			.then((errors) => {
 				if (errors.length) {
-					this.setState({ errors });
+					setFormData((prevState) => ({ ...prevState, errors }));
 				} else {
 					console.log(
 						`${username} is successfully signed up and authenticated!`
@@ -100,11 +43,59 @@ export default class UserSignUp extends Component {
 			.catch((err) => {
 				// handle rejected promises
 				console.log(err);
-				this.props.history.push('/error'); // push to history stack
+				history.push('/error'); // push to history stack
 			});
 	};
 
-	cancel = () => {
-		this.props.history.push('/');
+	const handleCancel = () => {
+		history.push('/');
 	};
-}
+
+	return (
+		<div className="bounds">
+			<div className="grid-33 centered signin">
+				<h1>Sign Up</h1>
+				<Form
+					cancel={handleCancel}
+					errors={errors}
+					submit={handleSubmit}
+					submitButtonText="Sign Up"
+					elements={() => (
+						<>
+							<input
+								id="name"
+								name="name"
+								type="text"
+								value={name}
+								onChange={handleChange}
+								placeholder="Name"
+							/>
+							<input
+								id="username"
+								name="username"
+								type="text"
+								value={username}
+								onChange={handleChange}
+								placeholder="User Name"
+							/>
+							<input
+								id="password"
+								name="password"
+								type="password"
+								value={password}
+								onChange={handleChange}
+								placeholder="Password"
+							/>
+						</>
+					)}
+				/>
+				<p>
+					Already have a user account? <Link to="/signin">Click here</Link>{' '}
+					to sign in!
+				</p>
+			</div>
+		</div>
+	);
+};
+
+export default withContext(UserSignUp);

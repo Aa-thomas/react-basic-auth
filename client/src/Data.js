@@ -1,13 +1,14 @@
+
 import config from './config';
 
-export default class Data {
-	api(
+const Data = () => {
+	const api = async (
 		path,
 		method = 'GET',
 		body = null,
 		requiresAuth = false,
 		credentials = null
-	) {
+	) => {
 		const url = config.apiBaseUrl + path;
 
 		const options = {
@@ -25,15 +26,11 @@ export default class Data {
 			options.headers['Authorization'] = `Basic ${encodedCredentials}`;
 		}
 
-		if (requiresAuth) {
-			const encodedCredentials = btoa();
-		}
-
 		return fetch(url, options);
-	}
+	};
 
-	async getUser(username, password) {
-		const response = await this.api(`/users`, 'GET', null, true, {
+	const getUser = async (username, password) => {
+		const response = await api(`/users`, 'GET', null, true, {
 			username,
 			password,
 		});
@@ -44,10 +41,10 @@ export default class Data {
 		} else {
 			throw new Error();
 		}
-	}
+	};
 
-	async createUser(user) {
-		const response = await this.api('/users', 'POST', user);
+	const createUser = async (user) => {
+		const response = await api('/users', 'POST', user);
 		if (response.status === 201) {
 			return [];
 		} else if (response.status === 400) {
@@ -57,5 +54,9 @@ export default class Data {
 		} else {
 			throw new Error();
 		}
-	}
-}
+	};
+
+	return { api, getUser, createUser };
+};
+
+export default Data;

@@ -1,44 +1,28 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Data from './Data';
 
-const Context = React.createContext();
+export const Context = React.createContext();
 
-export class Provider extends Component {
-	constructor() {
-		super();
-		this.data = new Data();
-	}
+const Provider = ({ children }) => {
+  const [data] = useState(new Data());
 
-	render() {
-		const value = {
-			data: this.data,
-		};
-		return (
-			<Context.Provider value={value}>
-				{this.props.children}
-			</Context.Provider>
-		);
-	}
+  const value = {
+    data,
+  };
 
-	signIn = async () => {};
+  return <Context.Provider value={value}>{children}</Context.Provider>;
+};
 
-	signOut = () => {};
-}
+const Consumer = Context.Consumer;
 
-export const Consumer = Context.Consumer;
+const withContext = (Component) => {
+  return function ContextComponent(props) {
+    return (
+      <Context.Consumer>
+        {(context) => <Component {...props} context={context} />}
+      </Context.Consumer>
+    );
+  };
+};
 
-/**
- * A higher-order component that wraps the provided component in a Context Consumer component.
- * @param {class} Component - A React component.
- * @returns {function} A higher-order component.
- */
-
-export default function withContext(Component) {
-	return function ContextComponent(props) {
-		return (
-			<Context.Consumer>
-				{(context) => <Component {...props} context={context} />}
-			</Context.Consumer>
-		);
-	};
-}
+export { Provider, Consumer, withContext };
