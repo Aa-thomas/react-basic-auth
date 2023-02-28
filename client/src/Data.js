@@ -1,5 +1,5 @@
-
 import config from './config';
+import axios from 'axios';
 
 const Data = () => {
 	const api = async (
@@ -26,7 +26,11 @@ const Data = () => {
 			options.headers['Authorization'] = `Basic ${encodedCredentials}`;
 		}
 
-		return fetch(url, options);
+		return axios.post(url, {
+			name: 'aaron',
+			username: 'randomness@hotmail.com',
+			password: 'hello',
+		});
 	};
 
 	const getUser = async (username, password) => {
@@ -44,7 +48,10 @@ const Data = () => {
 	};
 
 	const createUser = async (user) => {
-		const response = await api('/users', 'POST', user);
+		const response = await axios.post(
+			'http://localhost:5000/api/users',
+			user
+		);
 		if (response.status === 201) {
 			return [];
 		} else if (response.status === 400) {

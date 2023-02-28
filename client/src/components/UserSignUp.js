@@ -13,8 +13,8 @@ const UserSignUp = ({ context, history }) => {
 
 	const { name, username, password, errors } = formData;
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
+	const handleChange = (e) => {
+		const { name, value } = e.target;
 		setFormData((prevState) => ({
 			...prevState,
 			[name]: value,
@@ -28,6 +28,8 @@ const UserSignUp = ({ context, history }) => {
 			username,
 			password,
 		};
+
+		// console.log(context.data.createUser);
 
 		context.data
 			.createUser(user)
@@ -58,7 +60,7 @@ const UserSignUp = ({ context, history }) => {
 				<Form
 					cancel={handleCancel}
 					errors={errors}
-					submit={handleSubmit}
+					submit={(e) => handleSubmit(e)}
 					submitButtonText="Sign Up"
 					elements={() => (
 						<>
@@ -67,7 +69,7 @@ const UserSignUp = ({ context, history }) => {
 								name="name"
 								type="text"
 								value={name}
-								onChange={handleChange}
+								onChange={(e) => handleChange(e)}
 								placeholder="Name"
 							/>
 							<input
@@ -75,7 +77,7 @@ const UserSignUp = ({ context, history }) => {
 								name="username"
 								type="text"
 								value={username}
-								onChange={handleChange}
+								onChange={(e) => handleChange(e)}
 								placeholder="User Name"
 							/>
 							<input
@@ -83,7 +85,7 @@ const UserSignUp = ({ context, history }) => {
 								name="password"
 								type="password"
 								value={password}
-								onChange={handleChange}
+								onChange={(e) => handleChange(e)}
 								placeholder="Password"
 							/>
 						</>

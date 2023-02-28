@@ -4,25 +4,25 @@ import Data from './Data';
 export const Context = React.createContext();
 
 const Provider = ({ children }) => {
-  const [data] = useState(new Data());
+	const [data] = useState(Data());
 
-  const value = {
-    data,
-  };
+	const value = {
+		data,
+	};
 
-  return <Context.Provider value={value}>{children}</Context.Provider>;
+	return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
 const Consumer = Context.Consumer;
 
 const withContext = (Component) => {
-  return function ContextComponent(props) {
-    return (
-      <Context.Consumer>
-        {(context) => <Component {...props} context={context} />}
-      </Context.Consumer>
-    );
-  };
+	return function ContextComponent(props) {
+		return (
+			<Context.Consumer>
+				{(context) => <Component {...props} context={context} />}
+			</Context.Consumer>
+		);
+	};
 };
 
 export { Provider, Consumer, withContext };
