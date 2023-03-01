@@ -5,13 +5,16 @@ import Form from './Form';
 
 const UserSignUp = ({ context, history }) => {
 	const [formData, setFormData] = useState({
-		name: '',
-		username: '',
+		firstName: '',
+		lastName: '',
+		email: '',
 		password: '',
+		confirmedPassword: '',
 		errors: [],
 	});
 
-	const { name, username, password, errors } = formData;
+	const { firstName, lastName, email, password, confirmedPassword, errors } =
+		formData;
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -24,28 +27,36 @@ const UserSignUp = ({ context, history }) => {
 	const handleSubmit = () => {
 		// New user payload
 		const user = {
-			name,
-			username,
+			firstName,
+			lastName,
+			email,
 			password,
+			confirmedPassword,
 		};
 
 		// console.log(context.data.createUser);
 
 		context.data
 			.createUser(user)
-			.then((errors) => {
-				if (errors.length) {
-					setFormData((prevState) => ({ ...prevState, errors }));
-				} else {
-					console.log(
-						`${username} is successfully signed up and authenticated!`
-					);
-				}
+			.then(() => {
+				console.log(
+					`${email} is successfully signed up and authenticated!`
+				);
 			})
 			.catch((err) => {
 				// handle rejected promises
-				console.log(err);
-				history.push('/error'); // push to history stack
+				console.log('problems here', err);
+				if (err.response.status === 400) {
+					setFormData((prevState) => ({
+						...prevState,
+						errors: err.response.data.errors,
+					}));
+					console.log('Sign up failed', err.response.data);
+					console.log(formData);
+				} else {
+					console.log('Sign up failed', err);
+				}
+				// history.push('/error'); // push to history stack
 			});
 	};
 
@@ -65,20 +76,28 @@ const UserSignUp = ({ context, history }) => {
 					elements={() => (
 						<>
 							<input
-								id="name"
-								name="name"
+								id="firstName"
+								name="firstName"
 								type="text"
-								value={name}
+								value={firstName}
 								onChange={(e) => handleChange(e)}
-								placeholder="Name"
+								placeholder="First Name"
 							/>
 							<input
-								id="username"
-								name="username"
+								id="lastName"
+								name="lastName"
 								type="text"
-								value={username}
+								value={lastName}
 								onChange={(e) => handleChange(e)}
-								placeholder="User Name"
+								placeholder="Last Name"
+							/>
+							<input
+								id="email"
+								name="email"
+								type="text"
+								value={email}
+								onChange={(e) => handleChange(e)}
+								placeholder="Email"
 							/>
 							<input
 								id="password"
@@ -87,6 +106,14 @@ const UserSignUp = ({ context, history }) => {
 								value={password}
 								onChange={(e) => handleChange(e)}
 								placeholder="Password"
+							/>
+							<input
+								id="confirmedPassword"
+								name="confirmedPassword"
+								type="password"
+								value={confirmedPassword}
+								onChange={(e) => handleChange(e)}
+								placeholder="confirmedPassword"
 							/>
 						</>
 					)}

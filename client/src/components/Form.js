@@ -35,7 +35,7 @@ export default (props) => {
 
 function ErrorsDisplay({ errors }) {
 	let errorsDisplay = null;
-
+	console.log('errosDisplay', errors);
 	if (errors.length) {
 		errorsDisplay = (
 			<div>
