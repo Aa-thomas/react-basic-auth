@@ -36,7 +36,7 @@ const UserSignUp = ({ context, history }) => {
 
 		context.data
 			.createUser(user)
-			.then((res) => {
+			.then(() => {
 				console.log(
 					`${email} is successfully signed up and authenticated!`
 				);

@@ -10,16 +10,18 @@ import Authenticated from './components/Authenticated';
 import { withContext } from './Context';
 
 const UserSignUpWithContext = withContext(UserSignUp);
+const UserSignInWithContext = withContext(UserSignIn);
+const HeaderWithContext = withContext(Header);
 
 export default () => (
 	<Router>
 		<div>
-			<Header />
+			<HeaderWithContext />
 
 			<Switch>
 				<Route exact path="/" component={Public} />
 				<Route path="/authenticated" component={Authenticated} />
-				<Route path="/signin" component={UserSignIn} />
+				<Route path="/signin" component={UserSignInWithContext} />
 				<Route path="/signup" component={UserSignUpWithContext} />
 				<Route path="/signout" component={UserSignOut} />
 				<Route component={NotFound} />

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
-const UserSignIn = () => {
+const UserSignIn = ({ context, history }) => {
 	const [formData, setFormData] = useState({
-		username: '',
+		email: '',
 		password: '',
 		errors: [],
 	});
 
-	const { username, password, errors } = formData;
+	const { email, password, errors } = formData;
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -19,9 +19,25 @@ const UserSignIn = () => {
 		}));
 	};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		context.actions
+			.signIn(email, password)
+			.then(() => {
+				console.log(`${email} is successfully signed in!`);
+				history.push('/authenticated');
+			})
+			.catch((err) => {
+				setFormData((prevState) => ({
+					...prevState,
+					errors: ['Sign-in was unsuccessful'],
+				}));
+				console.log(err);
+			});
+	};
 
-	const handleCancel = () => {};
+	const handleCancel = () => {
+		history.push('/');
+	};
 
 	return (
 		<div className="bounds">
@@ -35,10 +51,10 @@ const UserSignIn = () => {
 					elements={() => (
 						<>
 							<input
-								id="username"
-								name="username"
+								id="email"
+								name="email"
 								type="text"
-								value={username}
+								value={email}
 								onChange={handleChange}
 								placeholder="User Name"
 							/>

@@ -6,7 +6,6 @@ const Data = () => {
 		path,
 		method = 'GET',
 		requiresAuth = false,
-		credentials = null,
 		data = null
 	) => {
 		let requestConfig = {
@@ -19,22 +18,22 @@ const Data = () => {
 		};
 
 		if (requiresAuth) {
-			const encodedCredentials = btoa(
-				`${credentials.username}:${credentials.password}`
-			);
-			requestConfig.auth = { encodedCredentials };
+			requestConfig.auth = {
+				username: data.email,
+				password: data.password,
+			};
 		}
 
 		return axios(requestConfig);
 	};
 
-	const getUser = async (username, password) => {
-		const response = await api(`/users`, 'GET', null, true, {
-			username,
+	const getUser = async (email, password) => {
+		const response = await api(`/users`, 'GET', true, {
+			email,
 			password,
 		});
 		if (response.status === 200) {
-			return response.json().then((data) => data);
+			return response.data;
 		} else if (response.status === 401) {
 			return null;
 		} else {
@@ -43,7 +42,7 @@ const Data = () => {
 	};
 
 	const createUser = async (user) => {
-		const response = await api(`/users`, 'POST', false, null, user);
+		const response = await api(`/users`, 'POST', false, user);
 		if (response.status === 201) {
 			return [];
 		} else if (response.status === 400) {
