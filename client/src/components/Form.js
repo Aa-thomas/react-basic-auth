@@ -3,15 +3,15 @@ import React from 'react';
 export default (props) => {
 	const { cancel, errors, submit, submitButtonText, elements } = props;
 
-	function handleSubmit(event) {
+	const handleSubmit = (event) => {
 		event.preventDefault();
 		submit();
-	}
+	};
 
-	function handleCancel(event) {
+	const handleCancel = (event) => {
 		event.preventDefault();
 		cancel();
-	}
+	};
 
 	return (
 		<div>
@@ -35,7 +35,6 @@ export default (props) => {
 
 function ErrorsDisplay({ errors }) {
 	let errorsDisplay = null;
-	console.log('errosDisplay', errors);
 	if (errors.length) {
 		errorsDisplay = (
 			<div>

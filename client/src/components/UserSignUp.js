@@ -34,29 +34,24 @@ const UserSignUp = ({ context, history }) => {
 			confirmedPassword,
 		};
 
-		// console.log(context.data.createUser);
-
 		context.data
 			.createUser(user)
-			.then(() => {
+			.then((res) => {
 				console.log(
 					`${email} is successfully signed up and authenticated!`
 				);
 			})
 			.catch((err) => {
 				// handle rejected promises
-				console.log('problems here', err);
-				if (err.response.status === 400) {
+				if (err.response?.status === 400) {
 					setFormData((prevState) => ({
 						...prevState,
 						errors: err.response.data.errors,
 					}));
 					console.log('Sign up failed', err.response.data);
-					console.log(formData);
 				} else {
 					console.log('Sign up failed', err);
 				}
-				// history.push('/error'); // push to history stack
 			});
 	};
 

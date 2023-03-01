@@ -5,32 +5,27 @@ const Data = () => {
 	const api = async (
 		path,
 		method = 'GET',
-		body = null,
 		requiresAuth = false,
-		credentials = null
+		credentials = null,
+		data = null
 	) => {
-		const url = config.apiBaseUrl + path;
-
-		const options = {
+		let requestConfig = {
+			url: config.apiBaseUrl + path,
 			method,
 			headers: {
 				'Content-Type': 'application/json; charset=utf-8',
 			},
+			data,
 		};
 
 		if (requiresAuth) {
 			const encodedCredentials = btoa(
 				`${credentials.username}:${credentials.password}`
 			);
-
-			options.headers['Authorization'] = `Basic ${encodedCredentials}`;
+			requestConfig.auth = { encodedCredentials };
 		}
 
-		return axios.post(url, {
-			name: 'aaron',
-			username: 'randomness@hotmail.com',
-			password: 'hello',
-		});
+		return axios(requestConfig);
 	};
 
 	const getUser = async (username, password) => {
@@ -48,10 +43,7 @@ const Data = () => {
 	};
 
 	const createUser = async (user) => {
-		const response = await axios.post(
-			'http://localhost:5000/api/users',
-			user
-		);
+		const response = await api(`/users`, 'POST', false, null, user);
 		if (response.status === 201) {
 			return [];
 		} else if (response.status === 400) {

@@ -22,7 +22,7 @@ export default () => (
 				<Route path="/signin" component={UserSignIn} />
 				<Route path="/signup" component={UserSignUpWithContext} />
 				<Route path="/signout" component={UserSignOut} />
-				{/* <Route component={NotFound} /> */}
+				<Route component={NotFound} />
 			</Switch>
 		</div>
 	</Router>
