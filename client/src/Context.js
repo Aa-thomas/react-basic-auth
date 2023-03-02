@@ -1,19 +1,29 @@
 import { createContext, useState } from 'react';
 import Data from './Data';
+import Cookies from 'js-cookie';
 
 export const Context = createContext();
 
 const Provider = ({ children }) => {
 	const [data] = useState(Data());
-	const [authenticatedUser, setAuthenticatedUser] = useState(null);
+	const [cookie] = useState(Cookies.get('authenticatedUser'));
+	const [authenticatedUser, setAuthenticatedUser] = useState(
+		cookie ? JSON.parse(cookie) : null
+	);
 
 	const signIn = async (email, password) => {
 		const user = await data.getUser(email, password);
 
 		if (user !== null) {
 			setAuthenticatedUser(user);
+			Cookies.set('authenticatedUser', JSON.stringify(user), { expires: 1 });
 			return user;
 		}
+	};
+
+	const signOut = () => {
+		setAuthenticatedUser(null);
+		Cookies.remove('authenticatedUser');
 	};
 
 	const value = {
@@ -21,6 +31,7 @@ const Provider = ({ children }) => {
 		data,
 		actions: {
 			signIn,
+			signOut,
 		},
 	};
 

@@ -40,6 +40,9 @@ const UserSignUp = ({ context, history }) => {
 				console.log(
 					`${email} is successfully signed up and authenticated!`
 				);
+				context.actions.signIn(email, password).then(() => {
+					history.push('/authenticated');
+				});
 			})
 			.catch((err) => {
 				// handle rejected promises

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
-const UserSignIn = ({ context, history }) => {
+const UserSignIn = ({ context, history, location }) => {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
@@ -20,11 +20,16 @@ const UserSignIn = ({ context, history }) => {
 	};
 
 	const handleSubmit = () => {
+		const { from } = location.state || {
+			from: {
+				pathname: '/authenticated',
+			},
+		};
 		context.actions
 			.signIn(email, password)
 			.then(() => {
 				console.log(`${email} is successfully signed in!`);
-				history.push('/authenticated');
+				history.push(from);
 			})
 			.catch((err) => {
 				setFormData((prevState) => ({
